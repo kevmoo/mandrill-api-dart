@@ -102,8 +102,8 @@ var MANDRILL_OPTS = {
   'port': 443,
   'prefix': '/api/1.0/',
   'headers': {
-    'Content-Type': 'application/json',
-    'User-Agent': 'Mandrill-Dart/1.0.4'
+    'Content-Type': 'application/json; charset=utf-8',
+    'User-Agent': 'Mandrill-Dart/1.0.5'
   }
 };
 

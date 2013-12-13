@@ -1,6 +1,7 @@
 library mandrill_api_server;
 
 import 'dart:async' as async;
+import 'dart:convert';
 import 'dart:io' as io;
 
 import 'mandrill_api.dart';
@@ -15,10 +16,13 @@ class Mandrill extends APIBase {
     var client = new io.HttpClient();
 
     try {
-      var request = await client.postUrl(uri);
+      io.HttpClientRequest request = await client.postUrl(uri);
+
       headers.forEach((k, v) => request.headers.set(k, v));
-      request.contentLength = body.length;
-      request.write(body);
+
+      var bytes = UTF8.encode(body);
+      request.contentLength = bytes.length;
+      request.add(bytes);
 
       var response = await request.close();
 
