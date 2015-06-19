@@ -11,18 +11,23 @@ class Mandrill extends APIBase {
   Mandrill(String apikey, [bool debug]) : super(apikey, debug);
 
   ///Make the appropriate call, returning a future that yields an API result
-  async.Future request(Uri uri, Map headers, String body) {
+  async.Future request(Uri uri, Map headers, String body) async {
     var client = new io.HttpClient();
-    return client.postUrl(uri).then((request) {
+
+    try {
+      var request = await client.postUrl(uri);
       headers.forEach((k, v) => request.headers.set(k, v));
       request.contentLength = body.length;
       request.write(body);
-      return request.close();
-    }).then((response) {
-      return response.expand((chunk) => chunk).toList().then((data) {
-        body = new String.fromCharCodes(data);
-        return handleResponse(response.statusCode, body);
-      });
-    });
+
+      var response = await request.close();
+
+      var data = await response.expand((chunk) => chunk).toList();
+
+      var responseBody = new String.fromCharCodes(data);
+      return handleResponse(response.statusCode, responseBody);
+    } finally {
+      client.close(force: true);
+    }
   }
 }
