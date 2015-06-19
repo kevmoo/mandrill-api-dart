@@ -1,9 +1,10 @@
 library mandrill_api_server;
 
-import 'dart:io' as io;
 import 'dart:async' as async;
-import 'package:mandrill_api/mandrill_api.dart';
-export 'package:mandrill_api/mandrill_api.dart' show MANDRILL_OPTS;
+import 'dart:io' as io;
+
+import 'mandrill_api.dart';
+export 'mandrill_api.dart' show MANDRILL_OPTS;
 
 ///Extend the base API class to make HTTP requests using dart:io
 class Mandrill extends APIBase {
