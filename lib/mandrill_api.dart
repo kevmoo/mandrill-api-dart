@@ -108,42 +108,26 @@ var MANDRILL_OPTS = {
 };
 
 abstract class APIBase {
-  String apikey;
-  bool debug;
-  var templates;
-  var exports;
-  var users;
-  var rejects;
-  var inbound;
-  var tags;
-  var messages;
-  var whitelists;
-  var ips;
-  var internal;
-  var subaccounts;
-  var urls;
-  var webhooks;
-  var senders;
-  var metadata;
+  final String apikey;
+  final bool debug;
+  Templates get templates => new Templates(this);
+  Exports get exports => new Exports(this);
+  Users get users => new Users(this);
+  Rejects get rejects => new Rejects(this);
+  Inbound get inbound => new Inbound(this);
+  Tags get tags => new Tags(this);
+  Messages get messages => new Messages(this);
+  Whitelists get whitelists => new Whitelists(this);
+  Ips get ips => new Ips(this);
+  Internal get internal => new Internal(this);
+  Subaccounts get subaccounts => new Subaccounts(this);
+  Urls get urls => new Urls(this);
+  Webhooks get webhooks => new Webhooks(this);
+  Senders get senders => new Senders(this);
+  Metadata get metadata => new Metadata(this);
 
   ///Initialize the API client, using [apikey] as the API key
-  APIBase(this.apikey, [this.debug = false]) {
-    templates = new Templates(this);
-    exports = new Exports(this);
-    users = new Users(this);
-    rejects = new Rejects(this);
-    inbound = new Inbound(this);
-    tags = new Tags(this);
-    messages = new Messages(this);
-    whitelists = new Whitelists(this);
-    ips = new Ips(this);
-    internal = new Internal(this);
-    subaccounts = new Subaccounts(this);
-    urls = new Urls(this);
-    webhooks = new Webhooks(this);
-    senders = new Senders(this);
-    metadata = new Metadata(this);
-  }
+  APIBase(this.apikey, [this.debug = false]);
 
   ///Build the API call and delegate to the appropriate implementation for making the call
   async.Future call(String uri, Map params) {
