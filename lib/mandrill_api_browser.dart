@@ -1,4 +1,5 @@
 library mandrill_api_browser;
+
 import 'dart:html' as html;
 import 'dart:async' as async;
 import 'package:mandrill_api/mandrill_api.dart';
@@ -11,7 +12,14 @@ class Mandrill extends APIBase {
   ///Make the appropriate call, returning a future that yields an API result
   async.Future request(Uri uri, Map headers, String body) {
     headers.remove('User-Agent');
-    return html.HttpRequest.request(uri.toString(), method: 'POST', responseType: 'application/json', mimeType: headers['Content-Type'], requestHeaders: headers, sendData: body).then((request) {
+    return html.HttpRequest
+        .request(uri.toString(),
+            method: 'POST',
+            responseType: 'application/json',
+            mimeType: headers['Content-Type'],
+            requestHeaders: headers,
+            sendData: body)
+        .then((request) {
       return handleResponse(request.status, request.responseText);
     }).catchError((err) {
       if (err is html.ProgressEvent) {

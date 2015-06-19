@@ -1,4 +1,5 @@
 library mandrill_api;
+
 import 'dart:async' as async;
 import 'dart:convert' as convert;
 
@@ -100,7 +101,10 @@ var MANDRILL_OPTS = {
   'host': 'mandrillapp.com',
   'port': 443,
   'prefix': '/api/1.0/',
-  'headers': {'Content-Type': 'application/json', 'User-Agent': 'Mandrill-Dart/1.0.4'}
+  'headers': {
+    'Content-Type': 'application/json',
+    'User-Agent': 'Mandrill-Dart/1.0.4'
+  }
 };
 
 abstract class APIBase {
@@ -145,7 +149,13 @@ abstract class APIBase {
   async.Future call(String uri, Map params) {
     params['key'] = apikey;
     var params_str = convert.JSON.encode(params);
-    uri = ['https://', MANDRILL_OPTS['host'], MANDRILL_OPTS['prefix'], uri, '.json'].join();
+    uri = [
+      'https://',
+      MANDRILL_OPTS['host'],
+      MANDRILL_OPTS['prefix'],
+      uri,
+      '.json'
+    ].join();
     return request(Uri.parse(uri), MANDRILL_OPTS['headers'], params_str);
   }
 
@@ -215,7 +225,8 @@ abstract class APIBase {
         return new UnknownMetadataFieldError(errorBody['message']);
       default:
         //The type might be newer than the client, so use a generic type where necessary
-        return new MandrillError(errorBody['name'] + ': ' + errorBody['message']);
+        return new MandrillError(
+            errorBody['name'] + ': ' + errorBody['message']);
     }
   }
 
@@ -225,7 +236,7 @@ abstract class APIBase {
       var error;
       try {
         error = castMandrillError(convert.JSON.decode(body));
-      } catch(e) {
+      } catch (e) {
         error = new MandrillError('We received an unexpected error: $body');
       }
       throw error;
@@ -243,8 +254,19 @@ class Templates {
 
   /**Add a new template
    */
-  async.Future add(String name, [String from_Email = null, String from_Name = null, String subject = null, String code = null, String text = null, bool publish = true, List labels = null]) {
-    var _params = {'name': name, 'from_email': from_Email, 'from_name': from_Name, 'subject': subject, 'code': code, 'text': text, 'publish': publish, 'labels': labels};
+  async.Future add(String name, [String from_Email = null,
+      String from_Name = null, String subject = null, String code = null,
+      String text = null, bool publish = true, List labels = null]) {
+    var _params = {
+      'name': name,
+      'from_email': from_Email,
+      'from_name': from_Name,
+      'subject': subject,
+      'code': code,
+      'text': text,
+      'publish': publish,
+      'labels': labels
+    };
     return master.call('templates/add', _params);
   }
   /**Get the information for an existing template
@@ -255,8 +277,19 @@ class Templates {
   }
   /**Update the code for an existing template. If null is provided for any fields, the values will remain unchanged.
    */
-  async.Future update(String name, [String from_Email = null, String from_Name = null, String subject = null, String code = null, String text = null, bool publish = true, List labels = null]) {
-    var _params = {'name': name, 'from_email': from_Email, 'from_name': from_Name, 'subject': subject, 'code': code, 'text': text, 'publish': publish, 'labels': labels};
+  async.Future update(String name, [String from_Email = null,
+      String from_Name = null, String subject = null, String code = null,
+      String text = null, bool publish = true, List labels = null]) {
+    var _params = {
+      'name': name,
+      'from_email': from_Email,
+      'from_name': from_Name,
+      'subject': subject,
+      'code': code,
+      'text': text,
+      'publish': publish,
+      'labels': labels
+    };
     return master.call('templates/update', _params);
   }
   /**Publish the content for the template. Any new messages sent using this template will start using the content that was previously in draft.
@@ -285,8 +318,13 @@ class Templates {
   }
   /**Inject content and optionally merge fields into a template, returning the HTML that results
    */
-  async.Future render(String template_Name, List template_Content, [List merge_Vars = null]) {
-    var _params = {'template_name': template_Name, 'template_content': template_Content, 'merge_vars': merge_Vars};
+  async.Future render(String template_Name, List template_Content,
+      [List merge_Vars = null]) {
+    var _params = {
+      'template_name': template_Name,
+      'template_content': template_Content,
+      'merge_vars': merge_Vars
+    };
     return master.call('templates/render', _params);
   }
 }
@@ -334,8 +372,18 @@ from your account's activity view. It includes the following fields: Date, Email
 Sender, Subject, Status, Tags, Opens, Clicks, Bounce Detail. If you have configured any custom
 metadata fields, they will be included in the exported data.
    */
-  async.Future activity([String notify_Email = null, String date_From = null, String date_To = null, List tags = null, List senders = null, List states = null, List api_Keys = null]) {
-    var _params = {'notify_email': notify_Email, 'date_from': date_From, 'date_to': date_To, 'tags': tags, 'senders': senders, 'states': states, 'api_keys': api_Keys};
+  async.Future activity([String notify_Email = null, String date_From = null,
+      String date_To = null, List tags = null, List senders = null,
+      List states = null, List api_Keys = null]) {
+    var _params = {
+      'notify_email': notify_Email,
+      'date_from': date_From,
+      'date_to': date_To,
+      'tags': tags,
+      'senders': senders,
+      'states': states,
+      'api_keys': api_Keys
+    };
     return master.call('exports/activity', _params);
   }
 }
@@ -381,8 +429,13 @@ add manually will never expire and there is no reputation penalty
 for removing them from your blacklist. Attempting to blacklist an
 address that has been whitelisted will have no effect.
    */
-  async.Future add(String email, [String comment = null, String subaccount = null]) {
-    var _params = {'email': email, 'comment': comment, 'subaccount': subaccount};
+  async.Future add(String email,
+      [String comment = null, String subaccount = null]) {
+    var _params = {
+      'email': email,
+      'comment': comment,
+      'subaccount': subaccount
+    };
     return master.call('rejects/add', _params);
   }
   /**Retrieves your email rejection blacklist. You can provide an email
@@ -390,8 +443,13 @@ address to limit the results. Returns up to 1000 results. By default,
 entries that have expired are excluded from the results; set
 include_expired to true to include them.
    */
-  async.Future list([String email = null, bool include_Expired = false, String subaccount = null]) {
-    var _params = {'email': email, 'include_expired': include_Expired, 'subaccount': subaccount};
+  async.Future list([String email = null, bool include_Expired = false,
+      String subaccount = null]) {
+    var _params = {
+      'email': email,
+      'include_expired': include_Expired,
+      'subaccount': subaccount
+    };
     return master.call('rejects/list', _params);
   }
   /**Deletes an email rejection. There is no limit to how many rejections
@@ -447,7 +505,8 @@ class Inbound {
   }
   /**Update the pattern or webhook of an existing inbound mailbox route. If null is provided for any fields, the values will remain unchanged.
    */
-  async.Future updateRoute(String id, [String pattern = null, String url = null]) {
+  async.Future updateRoute(String id,
+      [String pattern = null, String url = null]) {
     var _params = {'id': id, 'pattern': pattern, 'url': url};
     return master.call('inbound/update-route', _params);
   }
@@ -459,8 +518,16 @@ class Inbound {
   }
   /**Take a raw MIME document destined for a domain with inbound domains set up, and send it to the inbound hook exactly as if it had been sent over SMTP
    */
-  async.Future sendRaw(String raw_Message, [List to = null, String mail_From = null, String helo = null, String client_Address = null]) {
-    var _params = {'raw_message': raw_Message, 'to': to, 'mail_from': mail_From, 'helo': helo, 'client_address': client_Address};
+  async.Future sendRaw(String raw_Message, [List to = null,
+      String mail_From = null, String helo = null,
+      String client_Address = null]) {
+    var _params = {
+      'raw_message': raw_Message,
+      'to': to,
+      'mail_from': mail_From,
+      'helo': helo,
+      'client_address': client_Address
+    };
     return master.call('inbound/send-raw', _params);
   }
 }
@@ -511,26 +578,58 @@ class Messages {
 
   /**Send a new transactional message through Mandrill
    */
-  async.Future send(Map message, [bool async = false, String ip_Pool = null, String send_At = null]) {
-    var _params = {'message': message, 'async': async, 'ip_pool': ip_Pool, 'send_at': send_At};
+  async.Future send(Map message,
+      [bool async = false, String ip_Pool = null, String send_At = null]) {
+    var _params = {
+      'message': message,
+      'async': async,
+      'ip_pool': ip_Pool,
+      'send_at': send_At
+    };
     return master.call('messages/send', _params);
   }
   /**Send a new transactional message through Mandrill using a template
    */
-  async.Future sendTemplate(String template_Name, List template_Content, Map message, [bool async = false, String ip_Pool = null, String send_At = null]) {
-    var _params = {'template_name': template_Name, 'template_content': template_Content, 'message': message, 'async': async, 'ip_pool': ip_Pool, 'send_at': send_At};
+  async.Future sendTemplate(
+      String template_Name, List template_Content, Map message,
+      [bool async = false, String ip_Pool = null, String send_At = null]) {
+    var _params = {
+      'template_name': template_Name,
+      'template_content': template_Content,
+      'message': message,
+      'async': async,
+      'ip_pool': ip_Pool,
+      'send_at': send_At
+    };
     return master.call('messages/send-template', _params);
   }
   /**Search recently sent messages and optionally narrow by date range, tags, senders, and API keys. If no date range is specified, results within the last 7 days are returned. This method may be called up to 20 times per minute. If you need the data more often, you can use <a href="/api/docs/messages.html#method=info">/messages/info.json</a> to get the information for a single message, or <a href="http://help.mandrill.com/entries/21738186-Introduction-to-Webhooks">webhooks</a> to push activity to your own application for querying.
    */
-  async.Future search([String query = "*", String date_From = null, String date_To = null, List tags = null, List senders = null, List api_Keys = null, int limit = 100]) {
-    var _params = {'query': query, 'date_from': date_From, 'date_to': date_To, 'tags': tags, 'senders': senders, 'api_keys': api_Keys, 'limit': limit};
+  async.Future search([String query = "*", String date_From = null,
+      String date_To = null, List tags = null, List senders = null,
+      List api_Keys = null, int limit = 100]) {
+    var _params = {
+      'query': query,
+      'date_from': date_From,
+      'date_to': date_To,
+      'tags': tags,
+      'senders': senders,
+      'api_keys': api_Keys,
+      'limit': limit
+    };
     return master.call('messages/search', _params);
   }
   /**Search the content of recently sent messages and return the aggregated hourly stats for matching messages
    */
-  async.Future searchTimeSeries([String query = "*", String date_From = null, String date_To = null, List tags = null, List senders = null]) {
-    var _params = {'query': query, 'date_from': date_From, 'date_to': date_To, 'tags': tags, 'senders': senders};
+  async.Future searchTimeSeries([String query = "*", String date_From = null,
+      String date_To = null, List tags = null, List senders = null]) {
+    var _params = {
+      'query': query,
+      'date_from': date_From,
+      'date_to': date_To,
+      'tags': tags,
+      'senders': senders
+    };
     return master.call('messages/search-time-series', _params);
   }
   /**Get the information for a single recently sent message
@@ -553,8 +652,20 @@ class Messages {
   }
   /**Take a raw MIME document for a message, and send it exactly as if it were sent through Mandrill's SMTP servers
    */
-  async.Future sendRaw(String raw_Message, [String from_Email = null, String from_Name = null, List to = null, bool async = false, String ip_Pool = null, String send_At = null, String return_Path_Domain = null]) {
-    var _params = {'raw_message': raw_Message, 'from_email': from_Email, 'from_name': from_Name, 'to': to, 'async': async, 'ip_pool': ip_Pool, 'send_at': send_At, 'return_path_domain': return_Path_Domain};
+  async.Future sendRaw(String raw_Message, [String from_Email = null,
+      String from_Name = null, List to = null, bool async = false,
+      String ip_Pool = null, String send_At = null,
+      String return_Path_Domain = null]) {
+    var _params = {
+      'raw_message': raw_Message,
+      'from_email': from_Email,
+      'from_name': from_Name,
+      'to': to,
+      'async': async,
+      'ip_pool': ip_Pool,
+      'send_at': send_At,
+      'return_path_domain': return_Path_Domain
+    };
     return master.call('messages/send-raw', _params);
   }
   /**Queries your scheduled emails by sender or recipient, or both.
@@ -701,7 +812,6 @@ class Internal {
   APIBase master;
 
   Internal(this.master);
-
 }
 ///Namespace to document and complete subaccounts calls
 class Subaccounts {
@@ -717,8 +827,14 @@ class Subaccounts {
   }
   /**Add a new subaccount
    */
-  async.Future add(String id, [String name = null, String notes = null, int custom_Quota = null]) {
-    var _params = {'id': id, 'name': name, 'notes': notes, 'custom_quota': custom_Quota};
+  async.Future add(String id,
+      [String name = null, String notes = null, int custom_Quota = null]) {
+    var _params = {
+      'id': id,
+      'name': name,
+      'notes': notes,
+      'custom_quota': custom_Quota
+    };
     return master.call('subaccounts/add', _params);
   }
   /**Given the ID of an existing subaccount, return the data about it
@@ -729,8 +845,14 @@ class Subaccounts {
   }
   /**Update an existing subaccount
    */
-  async.Future update(String id, [String name = null, String notes = null, int custom_Quota = null]) {
-    var _params = {'id': id, 'name': name, 'notes': notes, 'custom_quota': custom_Quota};
+  async.Future update(String id,
+      [String name = null, String notes = null, int custom_Quota = null]) {
+    var _params = {
+      'id': id,
+      'name': name,
+      'notes': notes,
+      'custom_quota': custom_Quota
+    };
     return master.call('subaccounts/update', _params);
   }
   /**Delete an existing subaccount. Any email related to the subaccount will be saved, but stats will be removed and any future sending calls to this subaccount will fail.
@@ -809,7 +931,8 @@ class Webhooks {
   }
   /**Add a new webhook
    */
-  async.Future add(String url, [String description = null, List events = null]) {
+  async.Future add(String url,
+      [String description = null, List events = null]) {
     var _params = {'url': url, 'description': description, 'events': events};
     return master.call('webhooks/add', _params);
   }
@@ -821,8 +944,14 @@ class Webhooks {
   }
   /**Update an existing webhook
    */
-  async.Future update(int id, String url, [String description = null, List events = null]) {
-    var _params = {'id': id, 'url': url, 'description': description, 'events': events};
+  async.Future update(int id, String url,
+      [String description = null, List events = null]) {
+    var _params = {
+      'id': id,
+      'url': url,
+      'description': description,
+      'events': events
+    };
     return master.call('webhooks/update', _params);
   }
   /**Delete an existing webhook
@@ -918,4 +1047,3 @@ class Metadata {
     return master.call('metadata/delete', _params);
   }
 }
-
